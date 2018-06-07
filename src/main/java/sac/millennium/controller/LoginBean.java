@@ -9,7 +9,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
 import sac.millennium.dao.IMenuDAO;
@@ -61,7 +60,7 @@ public class LoginBean implements Serializable {
 		// model = new DefaultMenuModel();
 	}
 
-	public void login(ActionEvent event) {
+	public String login() {
 		FacesMessage message = null;
 		this.usuario = service.iniciarSesion(this.usuario);
 
@@ -73,26 +72,26 @@ public class LoginBean implements Serializable {
 			loggedIn = true;
 			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuario);
 			loggedIn = true;
-			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido(a)", usuario.getNombre());
-			ruta = "/controlproyectsat/view/common/principal.xhtml";
+			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido(a)", this.usuario.getNombre());
+			ruta = "/view/common/principal?faces-redirect=true";
 		} else {
 			System.out.println("Error de logeo");
 			loggedIn = false;
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Error de acceso",
 					"Usuario o password es incorrecto");
 			this.usuario = new Usuario();
-			ruta = "/controlproyectsat/";
+			ruta = "login?faces-redirect=true";
 		}
 		FacesContext.getCurrentInstance().addMessage(null, message);
-		// PrimeFaces.current().ajax().addCallbackParam("loggedIn", loggedIn);
-		// PrimeFaces.current().ajax().addCallbackParam("ruta", ruta);
+		return ruta;
 	}
 
-	public void logout() {
+	public String logout() {
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 		session.invalidate();
 		loggedIn = false;
 		Conexion.desconectar();
+		return "/security/login?faces-redirect=true";
 	}
 
 	// public void construirMenu() {

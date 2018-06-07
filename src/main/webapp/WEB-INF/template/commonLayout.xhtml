@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-<h:head>
+<head jsf:id="head">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta name="description"
 		content="Creative - Bootstrap 3 Responsive Admin Template" />
@@ -12,36 +15,20 @@
 	<meta name="keyword"
 		content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal" />
 	<link rel="shortcut icon" href="img/favicon.png" />
-
-	<title>Login Page 2 | Creative - Bootstrap 3 Responsive Admin
-		Template</title>
+	<title>Template</title>
 
 	<!-- Bootstrap CSS -->
 	<h:outputStylesheet name="bootstrap.min.css" library="css" />
 	<!-- bootstrap theme -->
 	<h:outputStylesheet name="bootstrap-theme.css" library="css" />
-	<!--external css-->
-	<!-- font icon -->
-	<h:outputStylesheet name="elegant-icons-style.css" library="css" />
-	<h:outputStylesheet name="font-awesome.css" library="css" />
-
-	<!-- owl carousel -->
-	<h:outputStylesheet name="owl.carousel.css" library="css" />
-	<h:outputStylesheet name="jquery-jvectormap-1.2.2.css" library="css" />
 	<!-- Custom styles -->
-	<h:outputStylesheet name="fullcalendar.css" library="css" />
-	<h:outputStylesheet name="widgets.css" library="css" />
 	<h:outputStylesheet name="style.css" library="css" />
 	<h:outputStylesheet name="style-responsive.css" library="css" />
-	<h:outputStylesheet name="xcharts.min.css" library="css" />
-	<h:outputStylesheet name="jquery-ui-1.10.4.min.css" library="css" />
 
-</h:head>
-<body>
+</head>
+<body jsf:id="body">
 	<!-- container section start -->
 	<section id="container" class="">
-
-
 		<header class="header dark-bg">
 			<div class="toggle-nav">
 				<div class="icon-reorder tooltips"
@@ -54,31 +41,29 @@
 			<a href="index.html" class="logo">Nice <span class="lite">Admin</span></a>
 			<!--logo end-->
 
-			<div class="top-nav notification-row">
-				<!-- notificatoin dropdown start-->
-
-				<!-- user login dropdown start-->
-				<li class="dropdown"><a data-toggle="dropdown"
-					class="dropdown-toggle" href="#"> <span class="profile-ava">
-							<img alt="" src="img/avatar1_small.jpg" />
-					</span> <span class="username">Jenifer Smith</span> <b class="caret"></b>
-				</a>
-					<ul class="dropdown-menu extended logout">
-						<!-- 						<div class="log-arrow-up"></div> -->
-						<li class="eborder-top"><a href="#"><i
-								class="icon_profile"></i> My Profile</a></li>
-						<li><a href="#"><i class="icon_mail_alt"></i> My Inbox</a></li>
-						<li><a href="#"><i class="icon_clock_alt"></i> Timeline</a></li>
-						<li><a href="#"><i class="icon_chat_alt"></i> Chats</a></li>
-						<li><a href="login.html"><i class="icon_key_alt"></i> Log
-								Out</a></li>
-						<li><a href="documentation.html"><i class="icon_key_alt"></i>Documentation</a></li>
-						<li><a href="documentation.html"><i class="icon_key_alt"></i>Documentation</a></li>
-					</ul></li>
-				<!-- user login dropdown end -->
-
-				<!-- notificatoin dropdown end-->
-			</div>
+			<h:form>
+				<div class="top-nav notification-row">
+					<!-- notificatoin dropdown start-->
+						<ul class="nav pull-right top-menu">
+							<!-- user login dropdown start-->
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<span class="profile-ava">
+<!-- 										<h:graphicImage value="avatar1_small.jpg" library="img" /> -->
+									</span>
+									<h:outputLabel styleClass="username" value="#{loginBean.usuario.nombre}" /> <b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu extended logout">
+									<!-- 						<div class="log-arrow-up"></div> -->
+									<li class="eborder-top"><a href="#"><i class="icon_profile"></i> My Profile</a></li>									
+									<li><a jsf:action="#{loginBean.logout()}"><i class="icon_chat_alt"></i> Cerrar Sesión</a></li>
+								</ul>
+							</li>
+							<!-- user login dropdown end -->
+						</ul>
+					<!-- notificatoin dropdown end-->
+				</div>
+			</h:form>
 
 		</header>
 		<!--header end-->
@@ -87,61 +72,16 @@
 		<aside>
 			<div id="sidebar" class="nav-collapse ">
 				<!-- sidebar menu start-->
+
 				<ul class="sidebar-menu">
-					<li class="active"><a class="" href="index.html"> <i
-							class="icon_house_alt"></i> <span>Dashboard</span>
-					</a></li>
-					<li class="sub-menu"><a href="javascript:;" class=""> <i
-							class="icon_document_alt"></i> <span>Forms</span> <span
-							class="menu-arrow arrow_carrot-right"></span>
-					</a>
-						<ul class="sub">
-							<li><a class="" href="form_component.html">Form Elements</a></li>
-							<li><a class="" href="form_validation.html">Form
-									Validation</a></li>
-						</ul></li>
-					<li class="sub-menu"><a href="javascript:;" class=""> <i
-							class="icon_desktop"></i> <span>UI Fitures</span> <span
-							class="menu-arrow arrow_carrot-right"></span>
-					</a>
-						<ul class="sub">
-							<li><a class="" href="general.html">Elements</a></li>
-							<li><a class="" href="buttons.html">Buttons</a></li>
-							<li><a class="" href="grids.html">Grids</a></li>
-						</ul></li>
-					<li><a class="" href="widgets.html"> <i
-							class="icon_genius"></i> <span>Widgets</span>
-					</a></li>
-					<li><a class="" href="chart-chartjs.html"> <i
-							class="icon_piechart"></i> <span>Charts</span>
-
-					</a></li>
-
-					<li class="sub-menu">
-						<a href="javascript:;" class="">
-							<i class="icon_table"></i> 
-							<span>Tables</span>
-							<span class="menu-arrow arrow_carrot-right"></span>
-						</a>
-						<ul class="sub">
-							<li><a class="" href="#">Basic Table</a></li>
-						</ul>
-					</li>
-
-					<li class="sub-menu"><a href="#" class=""> <i
-							class="icon_documents_alt"></i> <span>Pages</span> <span
-							class="menu-arrow arrow_carrot-right"></span>
-					</a>
-						<ul class="sub">
-							<li><a class="" href="#">Profile</a></li>
-							<li><a class="" href="#"><span>Login
-										Page</span></a></li>
-							<li><a class="" href="#"><span>Contact
-										Page</span></a></li>
-							<li><a class="" href="#">Blank Page</a></li>
-							<li><a class="" href="#">404 Error</a></li>
-						</ul></li>
-
+					<c:forEach items="#{loginBean.listaMenu}" var="menu">
+						<li class="active">
+							<a class="" jsf:outcome="#{menu.formularioAsociado}"> 
+								<i class="icon_house_alt"></i> <span>#{menu.nombreOpcion}</span>
+							</a>
+						</li>
+					</c:forEach>
+					
 				</ul>
 				<!-- sidebar menu end-->
 			</div>
@@ -150,9 +90,9 @@
 
 		<!--main content start-->
 		<section id="main-content">
-		<section class="wrapper">
-			<ui:insert name="body">Page Body</ui:insert>
-		</section>
+			<section class="wrapper">
+				<ui:insert name="body">Page Body</ui:insert>
+			</section>
 		</section>
 	</section>
 	<!-- container section start -->
@@ -167,39 +107,21 @@
 	<!-- nice scroll -->
 	<h:outputScript name="jquery.scrollTo.min.js" library="js" />
 	<h:outputScript name="jquery.nicescroll.js" library="js" />
-	<!-- charts scripts -->
-	<h:outputScript name="jquery.knob.js" library="assets/jquery-knob/js" />
-	<h:outputScript name="jquery.sparkline.js" library="js" />
-	<h:outputScript name="jquery.easy-pie-chart.js"
-		library="assets/jquery-easy-pie-chart" />
-	<h:outputScript name="owl.carousel.js" library="js" />
-	<!-- jQuery full calendar -->
-	<h:outputScript name="fullcalendar.min.js" library="js" />
-	<!-- Full Google Calendar - Calendar -->
-	<h:outputScript name="fullcalendar.js"
-		library="assets/fullcalendar/fullcalendar" />
-	<!--script for this page only-->
-	<h:outputScript name="calendar-custom.js" library="js" />
-	<h:outputScript name="jquery.rateit.min.js" library="js" />
-	<!-- custom select -->
-	<h:outputScript name="jquery.customSelect.min.js" library="js" />
-	<h:outputScript name="chart-master/Chart.js" library="assets" />
-
 	<!--custome script for all page-->
 	<h:outputScript name="scripts.js" library="js" />
-	<!-- custom script for this page-->
-	<h:outputScript name="sparkline-chart.js" library="js" />
-	<h:outputScript name="easy-pie-chart.js" library="js" />
-	<h:outputScript name="jquery-jvectormap-1.2.2.min.js" library="js" />
-	<h:outputScript name="jquery-jvectormap-world-mill-en.js" library="js" />
-	<h:outputScript name="xcharts.min.js" library="js" />
-	<h:outputScript name="jquery.autosize.min.js" library="js" />
-	<h:outputScript name="jquery.placeholder.min.js" library="js" />
-	<h:outputScript name="gdp-data.js" library="js" />
-	<h:outputScript name="morris.min.js" library="js" />
-	<h:outputScript name="sparklines.js" library="js" />
-	<h:outputScript name="charts.js" library="js" />
-	<h:outputScript name="jquery.slimscroll.min.js" library="js" />
+    <!-- custom script for this page-->
+    <script src="js/sparkline-chart.js"></script>
+    <script src="js/easy-pie-chart.js"></script>
+    <script src="js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="js/xcharts.min.js"></script>
+    <script src="js/jquery.autosize.min.js"></script>
+    <script src="js/jquery.placeholder.min.js"></script>
+    <script src="js/gdp-data.js"></script>
+    <script src="js/morris.min.js"></script>
+    <script src="js/sparklines.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/jquery.slimscroll.min.js"></script>
 
 </body>
 </html>
