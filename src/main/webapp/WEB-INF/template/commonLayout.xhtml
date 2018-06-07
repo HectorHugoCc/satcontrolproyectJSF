@@ -38,7 +38,7 @@
 			</div>
 
 			<!--logo start-->
-			<a href="index.html" class="logo">Nice <span class="lite">Admin</span></a>
+			<a jsf:outcome="/view/common/principal.jsf" class="logo">Nice <span class="lite">Admin</span></a>
 			<!--logo end-->
 
 			<h:form>
@@ -75,10 +75,23 @@
 
 				<ul class="sidebar-menu">
 					<c:forEach items="#{loginBean.listaMenu}" var="menu">
-						<li class="active">
-							<a class="" jsf:outcome="#{menu.formularioAsociado}"> 
-								<i class="icon_house_alt"></i> <span>#{menu.nombreOpcion}</span>
-							</a>
+						<li class="sub-menu">
+							<c:if test="#{menu.formularioAsociado == '#'}">
+								<a class=""> 
+									<i class="icon_document_alt"></i>
+									<span>#{menu.nombreOpcion}</span> 
+									<span class="menu-arrow arrow_carrot-right"></span>
+								</a>
+							</c:if>
+							<ul class="sub">
+								<c:forEach items="#{loginBean.listaMenu}" var="item">
+									<c:if test="#{item.contenedor == menu.id}">
+										<c:if test="#{item.formularioAsociado != '#'}">
+											<li><a class="" jsf:outcome="#{item.formularioAsociado}">#{item.nombreOpcion}</a></li>
+										</c:if>
+									</c:if>
+								</c:forEach>
+							</ul>
 						</li>
 					</c:forEach>
 					
