@@ -1,155 +1,326 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+<link href="/resources/css/bootstrap4.min.css" rel="stylesheet"
+	type="text/css" />
 
 
 <ui:composition template="/WEB-INF/template/commonLayout.xhtml">
+
+
 	<ui:define name="pageTitle">Perfil</ui:define>
+
+	<ui:define name="css">
+		<!-- Bootstrap CSS -->
+
+
+		<h:outputStylesheet name="bootstrap.min.css" library="css" />
+		<!-- bootstrap theme -->
+		<h:outputStylesheet name="bootstrap-theme.css" library="css" />
+		<!-- Custom styles -->
+		<h:outputStylesheet name="style.css" library="css" />
+		<h:outputStylesheet name="style-responsive.css" library="css" />
+
+
+	</ui:define>
 	<ui:define name="body">
 
-		<!-- LISTA PERFIL -->
-		<h:form id="listaPerfil">
 
-			<p:growl id="msgs" showDetail="true"></p:growl>
+		<center>
+			<h2>
+				<h:outputText value="Lista de Perfil" />
+			</h2>
+		</center>
 
-			<h:inputHidden value="#{perfilBean.perfilSeleccionado.id}" />
-			<p:fieldset legend="Perfiles" widgetVar="wlistar">
-				<h:panelGrid columns="6">
 
-					<p:dataTable id="perfildt" var="perfil"
-						value="#{perfilBean.listaPerfil}" selectionMode="single"
-						rowKey="#{perfil.id}" editable="true" style="margin-bottom:20px"
-						paginator="true" rows="5" widgetVar="cell_perfil"
-						paginatorTemplate="	{FirstPageLink}
-					{LastPageLink}
-					{PreviousPageLink}
-					{NextPageLink}
-					{PageLinks}
-					{CurrentPageReport}
-					{RowsPerPageDropdown} "
-						scrollable="true" rowsPerPageTemplate="1, 3, 5"
-						currentPageReportTemplate="Página: ({currentPage}/{totalPages})">
 
-						<f:facet name="header">Lista Perfil</f:facet>
 
-						<!-- p:ajax  inmediate="true" -->
+		<div class="container">
 
-						<p:ajax event="rowEdit" listener="#{perfilBean.onRowEdit}"
-							update=":listaPerfil:msgs" />
-						<p:ajax event="rowEditCancel" listener="#{perfilBean.onRowCancel}"
-							update=":listaPerfil:msgs" />
+			<div class="table-responsive">
 
-						<p:column headerText="Id">
-							<p:cellEditor disabled="true">
-								<f:facet name="output">
-									<h:outputText value="#{perfil.id}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{perfil.id}" style="width:100%"></p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+				<a data-toggle="modal" href="#example"
+					class="btn btn-primary btn-large"> Nuevo Perfil</a>
 
-						<p:column headerText="Descripcion">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{perfil.descripcion}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{perfil.descripcion}" style="width:100%"
-										label="Descripcion"></p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
 
-						<p:column headerText="Descripcion Corta">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{perfil.descripcionCorta}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{perfil.descripcionCorta}"
-										style="width:100%" label="Descripcion Corta"></p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
 
-						<p:column headerText="Estado" width="60">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText
-										value="#{perfil.estado==1?'Habilitado':'Deshabilitado'}" />
-								</f:facet>
+				<h:form id="form_perfil">
 
-								<f:facet name="input">
-									<p:selectOneMenu value="#{perfil.estado}" style="width:100%">
-										<f:selectItem itemLabel="Habilitado" itemValue="1" />
-										<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
-									</p:selectOneMenu>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+					<table id="perfildt" class="table table-striped table-bordered"
+						style="width: 100%">
 
-						<p:column style="width:100px">
-							<f:facet name="header">Acciones</f:facet>
-							<p:rowEditor />
-						</p:column>
-					</p:dataTable>
-				</h:panelGrid>
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Descripcion</th>
+								<th>Descripcion Corta</th>
+								<th>Estado</th>
+								<th>Acciones</th>
 
-				<p:commandButton type="button" value="Crearperfill" id="crearBtn"
-					onclick="PF('perfil_create').show()"></p:commandButton>
-			</p:fieldset>
-		</h:form>
-		<!-- FIN LISTA PERFIL -->
-		<!-- CREAR PERFIL -->
-		<p:dialog closeOnEscape="true" widgetVar="perfil_create"
-			autoupdate="true" showEffect="clip" hideEffect="drop" width="800"
-			footer="Crear Perfil">
-			<h:form id="crearPerfil">
+							</tr>
+						</thead>
 
-				<h:inputHidden value="#{perfilBean.perfilSeleccionado.id}" />
+						<tbody>
+							<c:forEach items="#{perfilBean.listaPerfil}" var="perfil">
+								<tr>
+									<td><h:outputText value="#{perfil.id}" /></td>
+									<td><h:outputText value="#{perfil.descripcion}" /></td>
+									<td><h:outputText value="#{perfil.descripcionCorta}" /></td>
+									<td><h:outputText
+											value="#{perfil.estado==1?'Habilitado':'Deshabilitado'}" /></td>
+									<td><a data-toggle="modal" href="#update" jsf:id="btn_update"
+										class="btn btn-primary btn-large" jsf:ajax="false"> Update
+										<f:ajax event="click" listener="#{perfilBean.editPerfil(perfil.id)}" render=":updatePerfil"/>
+										</a>
 
-				<p:fieldset legend="Crear Perfil">
-					<h:panelGrid columns="3">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-2">
+											<h:commandButton action="#{perfilBean.elimina(perfil.id)}"
+												value="Delete" class="btn btn-danger"
+												update=":form_perfil:perfildt" />
+										</div></td>
 
-						<f:facet name="header">Crear Perfil</f:facet>
+								</tr>
 
-						<p:outputLabel value="Descripcion" for="text_des" />
-						<p:inputText id="text_des"
-							value="#{perfilBean.perfilSeleccionado.descripcion}"
-							style="width: 200px;" required="true"
-							requiredMessage="Completar Descripcion" />
-						<p:message for="text_des" />
+							</c:forEach>
+						</tbody>
 
-						<p:outputLabel value="Descripcion Corta" for="text_desCor" />
-						<p:inputText id="text_desCor"
-							value="#{perfilBean.perfilSeleccionado.descripcionCorta}"
-							style="width: 200px;" required="true"
-							requiredMessage="Completar Descripcion Corta" />
-						<p:message for="text_desCor" />
+					</table>
 
-						<p:outputLabel value="Estado"></p:outputLabel>
-						<p:selectOneMenu id="tipoEstado"
-							value="#{perfilBean.perfilSeleccionado.estado}">
-							<f:selectItem itemLabel="Habilitado" itemValue="1" />
-							<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
-						</p:selectOneMenu>
+				</h:form>
 
-						<p:commandButton value="Registrar" ajax="false"
-							actionListener="#{perfilBean.registra}"
-							oncomplete="if(!args.validationFailed) PF('perfil_create').hide()"
-							update="#{perfilBean.listarTodo()}">
-							<p:ajax rendered=":listaPerfil :listaPerfil:perfildt"></p:ajax>
-						</p:commandButton>
-					</h:panelGrid>
-				</p:fieldset>
-			</h:form>
-		</p:dialog>
-		<!-- FIN CREAR PERFIL -->
+				<!-- crear Perfil -->
+				<div id="example" class="modal hide fade in" style="display: none;">
+
+					<div class="modal-content">
+
+						<h:form id="createPerfil" class="form-horizontal">
+
+							<div class="modal-header">
+								<a data-dismiss="modal" class="close">×</a>
+								<h2>Crear Nuevo Perfil</h2>
+
+							</div>
+
+							<div class="modal-body">
+								<div class="form-group">
+									<h:outputLabel for="descripc" class="control-label col-sm-4">Descripcion:</h:outputLabel>
+									<div class="col-sm-4">
+										<h:inputText id="descripc"
+											value="#{perfilBean.perfilSeleccionado.descripcion}"
+											class="form-control"
+											validatorMessage="Descripcion is required">
+											<f:validateRequired />
+										</h:inputText>
+									</div>
+								</div>
+
+
+
+								<div class="form-group">
+									<h:outputLabel for="descripcionCorta"
+										class="control-label col-sm-4">Descripcion Corta:</h:outputLabel>
+									<div class="col-sm-4">
+										<h:inputTextarea id="descripcionCorta"
+											value="#{perfilBean.perfilSeleccionado.descripcionCorta}"
+											class="form-control"
+											validatorMessage="Descrip. Corta is required">
+											<f:validateRequired />
+										</h:inputTextarea>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<h:outputLabel for="estado" class="control-label col-sm-4">Estado:</h:outputLabel>
+									<div class="col-sm-4">
+
+										<h:selectOneMenu id="estado" class="form-control"
+											value="#{perfilBean.perfilSeleccionado.estado}"
+											validatorMessage="Estado is required">
+											<f:selectItem itemLabel="Habilitado" itemValue="1" />
+											<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
+											<f:validateRequired />
+										</h:selectOneMenu>
+									</div>
+								</div>
+
+
+
+
+							</div>
+
+							<div class="modal-footer">
+
+
+								<h:commandButton value="Registrar"
+									action="#{perfilBean.registra()}"
+									class="btn btn-success btnWidth" update=":form_perfil:perfildt" />
+
+
+								<h:commandButton value="Cerrar" class="btn btn-success btnWidth" />
+
+
+
+							</div>
+						</h:form>
+					</div>
+
+				</div>
+
+				<!-- update perfil -->
+
+				<div id="update" class="modal hide fade in" style="display: none;">
+
+					<div class="modal-content">
+
+						<h:form id="updatePerfil" class="form-horizontal">
+
+							<div class="modal-header">
+								<a data-dismiss="modal" class="close">×</a>
+								<h2>Editar Perfil</h2>
+
+							</div>
+
+							<div class="modal-body">
+
+								<div class="form-group">
+									<h:outputLabel for="descrip" class="control-label col-sm-4">Descripcion:</h:outputLabel>
+									<div class="col-sm-4">
+										<h:inputText id="descrip"
+											value="#{perfilBean.perfilSeleccionado.descripcion}"
+											class="form-control"
+											validatorMessage="Descripcion is required">
+											<f:validateRequired />
+										</h:inputText>
+									</div>
+								</div>
+
+
+
+								<div class="form-group">
+									<h:outputLabel for="descripcionCorta"
+										class="control-label col-sm-4">Descripcion Corta:</h:outputLabel>
+									<div class="col-sm-4">
+										<h:inputTextarea id="descripcionCorta"
+											value="#{perfilBean.perfilSeleccionado.descripcionCorta}"
+											class="form-control"
+											validatorMessage="Descrip. Corta is required">
+											<f:validateRequired />
+										</h:inputTextarea>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<h:outputLabel for="estado" class="control-label col-sm-4">Estado:</h:outputLabel>
+									<div class="col-sm-4">
+
+										<h:selectOneMenu id="estado" class="form-control"
+											value="#{perfilBean.perfilSeleccionado.estado}"
+											validatorMessage="Estado is required">
+											<f:selectItem itemLabel="Habilitado" itemValue="1" />
+											<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
+											<f:validateRequired />
+										</h:selectOneMenu>
+									</div>
+								</div>
+
+
+
+
+							</div>
+
+							<div class="modal-footer">
+
+
+								<h:commandButton value="Editar" action="#{perfilBean.update()}"
+									class="btn btn-success btnWidth" update=":form_perfil:perfildt" />
+
+
+								<h:commandButton value="Cerrar" class="btn btn-success btnWidth"
+									immediate="true" />
+
+
+
+							</div>
+						</h:form>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
 	</ui:define>
+	<ui:define name="script">
+		<h:outputScript name="jquery.js" library="js" />
+		<h:outputScript name="jquery-ui-1.10.4.min.js" library="js" />
+		<h:outputScript name="jquery-1.8.3.min.js" library="js" />
+		<h:outputScript name="jquery-ui-1.9.2.custom.min.js" library="js" />
+		<!-- bootstrap -->
+		<h:outputScript name="bootstrap.min.js" library="js" />
+		<!-- nice scroll -->
+		<h:outputScript name="jquery.scrollTo.min.js" library="js" />
+		<h:outputScript name="jquery.nicescroll.js" library="js" />
+		<!--custome script for all page-->
+		<h:outputScript name="scripts.js" library="js" />
+		<!-- custom script for this page-->
+		<script src="js/sparkline-chart.js"></script>
+		<script src="js/easy-pie-chart.js"></script>
+		<script src="js/jquery-jvectormap-1.2.2.min.js"></script>
+		<script src="js/jquery-jvectormap-world-mill-en.js"></script>
+		<script src="js/xcharts.min.js"></script>
+		<script src="js/jquery.autosize.min.js"></script>
+		<script src="js/jquery.placeholder.min.js"></script>
+		<script src="js/gdp-data.js"></script>
+		<script src="js/morris.min.js"></script>
+		<script src="js/sparklines.js"></script>
+		<script src="js/charts.js"></script>
+		<script src="js/jquery.slimscroll.min.js"></script>
+
+		<script
+			src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<script
+			src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+		<script
+			src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+		<script
+			src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+		<script type="text/javascript">
+    $(document).ready(function() {
+        $('#perfildt').DataTable(
+            
+             {     
+
+          "aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "iDisplayLength": 5
+           } 
+            );
+    } );
+    </script>
+
+		<script type="text/javascript">
+	$(document).ready(function() {
+		$('#example').modal('show');
+		$('#update').modal('show');
+		});
+	
+	</script>
+
+
+	</ui:define>
+
+
+
+
 </ui:composition>
 </html>

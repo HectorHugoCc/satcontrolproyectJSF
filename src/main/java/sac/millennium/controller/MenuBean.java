@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 import sac.millennium.dao.IMenuDAO;
 import sac.millennium.dao.IPerfilDAO;
@@ -72,15 +74,13 @@ public class MenuBean implements Serializable {
 		listarPadres();
 	}
 
-	// public String guardar() {
-	// System.out.println("MENU_BEAN_guardar(): ");
-	// servMenu.create(menu);
-	// PrimeFaces.current().resetInputs(":frm_crear_menu
-	// :frm_crear_menu:fs_crear_menu");
-	// FacesContext.getCurrentInstance().addMessage(null,
-	// new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Registrado"));
-	// return null;
-	// }
+	public void guardar() {
+		System.out.println("MENU_BEAN_guardar(): ");
+		servMenu.create(menu);
+		listarTodo();
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Registrado"));
+	}
 
 	public void editar() {
 		System.out.println("MENU_BEAN_editar(): ");
@@ -146,34 +146,6 @@ public class MenuBean implements Serializable {
 			this.menu.setFormularioAsociado("");
 		}
 	}
-
-	// public void onRowEdit(RowEditEvent event) {
-	// System.out.println("MENU_BEAN_onRowEdit(RowEditEvent event): ");
-	// servMenu.update((Menu) event.getObject());
-	// FacesMessage msg = new FacesMessage("Menu Editado", ((Menu)
-	// event.getObject()).getId());
-	// FacesContext.getCurrentInstance().addMessage(null, msg);
-	// }
-
-	// public void onRowCancel(RowEditEvent event) {
-	// System.out.println("MENU_BEAN_onRowCancel(RowEditEvent event): ");
-	// FacesMessage msg = new FacesMessage("Edición Cancelada", ((Menu)
-	// event.getObject()).getId());
-	// FacesContext.getCurrentInstance().addMessage(null, msg);
-	// }
-	//
-	// public void onCellEdit(CellEditEvent event) {
-	// System.out.println("MENU_BEAN_onCellEdit(CellEditEvent event): ");
-	// Object oldValue = event.getOldValue();
-	// Object newValue = event.getNewValue();
-	//
-	// if (newValue != null && !newValue.equals(oldValue)) {
-	// FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Celda
-	// Cambiada",
-	// "Antiguo: " + oldValue + ", Nuevo:" + newValue);
-	// FacesContext.getCurrentInstance().addMessage(null, msg);
-	// }
-	// }
 
 	/*
 	 * getters & setters
