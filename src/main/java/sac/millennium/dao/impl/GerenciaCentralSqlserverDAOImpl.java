@@ -60,6 +60,9 @@ public class GerenciaCentralSqlserverDAOImpl implements IGerenciaCentralDAO {
 			pstm.setString(5, obj.getEstado());
 			estado = pstm.executeUpdate();
 			cerrarRecursos();
+			
+			System.out.println("dao_create: "+ obj.getId()+"-"+obj.getCodigoPropio());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

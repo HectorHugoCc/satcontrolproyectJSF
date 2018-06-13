@@ -3,175 +3,337 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
 <ui:composition template="/WEB-INF/template/commonLayout.xhtml">
-
-	<ui:define name="pageTitle">Gerencia Central</ui:define>
-	<ui:define name="pageHeader"></ui:define>
-	<ui:define name="body">
-		<h:form id="listaGerenciaCentral">
-			<p:growl id="msgs" showDetail="true"></p:growl>
-
-			<p:fieldset legend="Gerencia Central">
-
-				<p:panelGrid columns="6">
-					<p:dataTable id="tblGerCentral"
-						value="#{gerenciaCentralBean.listaGerenciaCentral}" var="gece"
-						selectionMode="single" rowKey="#{gece.id}" editable="true"
-						style="margin-bottom:20px" paginator="true" rows="5"
-						widgetVar="cell_gece"
-						paginatorTemplate="	{FirstPageLink}
-					{LastPageLink}
-					{PreviousPageLink}
-					{NextPageLink}
-					{PageLinks}
-					{CurrentPageReport}
-					{RowsPerPageDropdown} "
-						scrollable="true" rowsPerPageTemplate="1, 3, 5"
-						currentPageReportTemplate="Página: ({currentPage}/{totalPages})">
-						<f:facet name="header"> Lista Gerencia Central</f:facet>
-
-						<!-- Ajax -->
-						<p:ajax event="rowEdit"
-							listener="#{gerenciaCentralBean.onRowEdit}"
-							update=":listaGerenciaCentral:msgs"></p:ajax>
-						<p:ajax event="rowEditCancel"
-							listener="#{gerenciaCentralBean.onRowCancel}"
-							update=":listaGerenciaCentral:msgs"></p:ajax>
-
-						<p:column headerText="Id">
-							<p:cellEditor disabled="true">
-								<f:facet name="output">
-									<h:outputText value="#{gece.id}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{gece.id}" style="width:100%"></p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
-
-						<p:column headerText="Codigo">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{gece.codigoPropio}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{gece.codigoPropio}" style="width:100%"></p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
-
-						<p:column headerText="Descripcion">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{gece.descripcion}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{gece.descripcion}" style="width:100%"></p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
-
-						<p:column headerText="Descripcion Corta">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{gece.descripcionCorta}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText value="#{gece.descripcionCorta}" style="width:100%"></p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
-
-						<p:column headerText="Estado">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText
-										value="#{gece.estado==1?'Habilitado':'Deshabilitado'}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:selectOneMenu value="#{gece.estado}" style="width:100%">
-										<f:selectItem itemLabel="Habilitado" itemValue="1" />
-										<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
-
-									</p:selectOneMenu>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
-
-					<p:column style="width:100px">
-						<f:facet name="header">Acciones</f:facet>
-						<p:rowEditor />
-						
-					</p:column>
-
-
-					</p:dataTable>
-				</p:panelGrid>
-				<p:commandButton type="button" value="Crear Gerencia Central"
-					id="crearBtn" onclick="PF('geCentral_create').show()">
-					
-					<f:setPropertyActionListener value="#{gece}"
-								target="#{gerenciaCentralBean.gerenciaCentralSeleccionado}" />
-					</p:commandButton>
-
-			</p:fieldset>
-		</h:form>
-
-		<p:dialog closeOnEscape="true" widgetVar="geCentral_create"
-			autoupdate="true" showEffect="clip" hideEffect="drop" width="800"
-			footer="Crear Nueva Gerencia Central">
-			<h:form id="crearGerCentral">
-
-				<p:growl id="msgs" showDetail="true" life="2000"></p:growl>
-
-				<p:fieldset legend="Crear Gerencia Central">
-					<h:panelGrid columns="3">
-
-
-						<p:outputLabel value="Codigo" for="text_cod" />
-						<p:inputText id="text_cod"
-							value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.codigoPropio}"
-							style="width: 200px;" required="true"
-							requiredMessage="Completar Codigo" />
-						<p:message for="text_cod" />
-
-						<p:outputLabel value="Descripcion" for="text_des" />
-						<p:inputText id="text_des"
-							value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.descripcion}"
-							style="width: 200px;" required="true"
-							requiredMessage="Completar Descripcion" />
-						<p:message for="text_des" />
-
-						<p:outputLabel value="Descripcion Corta" for="text_desCor" />
-						<p:inputText id="text_desCor"
-							value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.descripcionCorta}"
-							style="width: 200px;" required="true"
-							requiredMessage="Completar Descripcion Corta" />
-						<p:message for="text_desCor" />
-
-
-						<p:outputLabel value="Estado" for="tipoEstado"></p:outputLabel>
-						<p:selectOneMenu id="tipoEstado"
-							value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.estado}">
-							<f:selectItem itemLabel="Habilitado" itemValue="1" />
-							<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
-						</p:selectOneMenu>
-						<p:message for="tipoEstado"></p:message>
-
-						<p:commandButton value="Registrar" ajax="false"
-							actionListener="#{gerenciaCentralBean.registra()}"
-							oncomplete="if(!args.validationFailed) PF('geCentral_create').hide()"
-							update="#{gerenciaCentralBean.listarTodo()}" inmediate="true">
-							<p:ajax rendered=":listaGerenciaCentral :listaGerenciaCentral:tblGerCentral"></p:ajax>
-						</p:commandButton>
-					</h:panelGrid>
-				</p:fieldset>
-			</h:form>
-		</p:dialog>
-
+	<ui:define name="assets">
 	</ui:define>
 
+	<ui:define name="pageTitle">Gerencia Central</ui:define>
+
+	<ui:define name="body">
+		<center>
+			<h2>
+				<h:outputText value="Lista de Gerencia Central" />
+			</h2>
+		</center>
+
+		<!-- Listar Todo -->
+
+		<div class="container">
+
+
+			<div class="table-responsive">
+
+				<a data-toggle="modal" href="#dgl_crear_gerencice"
+					class="btn btn-primary"><i class="fa fa-plus"></i> Nueva
+					Gerencia Central</a>
+
+
+
+				<h:form id="listaGerenciaCentral">
+
+					<table id="central_dt" class="table table-striped table-bordered"
+						style="width: 100%">
+
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Codigo</th>
+								<th>Descripcion</th>
+								<th>Descripcion Corta</th>
+								<th>Estado</th>
+								<th>Acciones</th>
+
+							</tr>
+						</thead>
+
+						<tbody>
+							<c:forEach items="#{gerenciaCentralBean.listaGerenciaCentral}"
+								var="gerce">
+								<tr>
+									<td><h:outputText value="#{gerce.id}" /></td>
+									<td><h:outputText value="#{gerce.codigoPropio}" /></td>
+									<td><h:outputText value="#{gerce.descripcion}" /></td>
+									<td><h:outputText value="#{gerce.descripcionCorta}" /></td>
+									<td><h:outputText
+											value="#{gerce.estado==1?'Habilitado':'Deshabilitado'}" /></td>
+									<td>
+										<div class="col-sm-2">
+											<a data-toggle="modal" href="#update" jsf:id="btn_update"
+												class="btn btn-primary btn-large" jsf:ajax="false">
+												Update <f:ajax event="click"
+													listener="#{gerenciaCentralBean.leerCentral(gerce.id)}"/>
+											</a>
+										</div>
+										<div class="col-sm-1"></div>
+
+										<div class="col-sm-2">
+											<a data-toggle="modal" href="#amodal" class="btn btn-danger">Delete
+												<f:ajax event="click"
+													listener="#{gerenciaCentralBean.leerCentral(gerce.id)}"></f:ajax>
+											</a>
+
+
+										</div>
+									</td>
+
+								</tr>
+
+							</c:forEach>
+						</tbody>
+					</table>
+				</h:form>
+				<!-- advertencia delete -->
+				<div role="dialog" id="amodal" class="modal fade">
+					<div class="modal-dialog" style="width: 20%;">
+
+						<div class="modal-content">
+							<h:form id="form_delete">
+								<div class="modal-header">
+									<button aria-hidden="true" data-dismiss="modal" class="close"
+										type="button" jsf:immediate="true">×</button>
+									<h3>Seguro de eliminar</h3>
+									<div class="modal-footer">
+										<h:button value="No" dismiss="modal"
+											class="btn btn-success btnWidth" />
+										<h:commandButton
+											action="#{gerenciaCentralBean.elimina(gerenciaCentralBean.gerenciaCentralSeleccionado.id)}"
+											value="Yes" class="btn btn-success btnWidth" dismiss="modal"
+											update=":listaGerenciaCentral:central_dt" />
+									</div>
+								</div>
+							</h:form>
+						</div>
+
+					</div>
+				</div>
+				<!-- fin delete -->
+
+				<!-- crear Perfil -->
+				<div role="dialog" id="dgl_crear_gerencice" class="modal fade">
+					<div class="modal-dialog" style="width: 50%;">
+
+						<div class="modal-content">
+
+
+
+							<h:form id="crearGerCentral"
+								class="form-validate form-horizontal" method="get" action="">
+
+								<div class="modal-header">
+									<button aria-hidden="true" data-dismiss="modal" class="close"
+										type="button" jsf:immediate="true">×</button>
+									<h2>Crear Nueva Gerencia</h2>
+
+								</div>
+
+								<div class="modal-body">
+
+									<div class="container">
+									
+									<div class="form-group required-field-block">
+											<h:outputLabel for="codigo" class="control-label col-sm-4">Codigo:</h:outputLabel>
+											<div class="col-sm-4">
+												<h:inputText id="codigo" name="codigo"
+													pt:placeholder="Codigo"
+													value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.codigoPropio}"
+													class="form-control" required="true"
+													requiredMessage="Descripcion is required">
+
+												</h:inputText>
+												<h:message for="codigo" />
+											</div>
+										</div>
+									
+
+										<div class="form-group required-field-block">
+											<h:outputLabel for="descripc" class="control-label col-sm-4">Descripcion:</h:outputLabel>
+											<div class="col-sm-4">
+												<h:inputText id="descripc" name="descripc"
+													pt:placeholder="Descripcion"
+													value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.descripcion}"
+													class="form-control" required="true"
+													requiredMessage="Descripcion is required">
+
+												</h:inputText>
+												<h:message for="descripc" />
+											</div>
+										</div>
+
+										<div class="form-group required-field-block">
+											<h:outputLabel for="descripcorta" class="control-label col-sm-4">Descripcion Corta:</h:outputLabel>
+											<div class="col-sm-4">
+												<h:inputText id="descripcorta" name="descripcorta"
+													pt:placeholder="Descripcion Corta"
+													value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.descripcionCorta}"
+													class="form-control" required="true"
+													requiredMessage="Descripcion Corta is required">
+
+												</h:inputText>
+												<h:message for="descripcorta" />
+											</div>
+										</div>
+										
+										<div class="form-group">
+										<h:outputLabel for="estado" class="control-label col-sm-4">Estado:</h:outputLabel>
+										<div class="col-sm-4">
+
+											<h:selectOneMenu id="estado" class="form-control"
+												value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.estado}"
+												validatorMessage="Estado is required">
+												<f:selectItem itemLabel="Habilitado" itemValue="1" />
+												<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
+												<f:validateRequired />
+											</h:selectOneMenu>
+										</div>
+									</div>
+									</div>
+									</div>
+									
+									<div class="modal-footer">
+
+
+									<h:commandButton value="Registrar"
+										action="#{gerenciaCentralBean.registra()}"
+										class="btn btn-success btnWidth"
+										update=":listaGerenciaCentral:central_dt" />
+
+
+									<h:commandButton value="Cerrar"
+										class="btn btn-success btnWidth" inmediate="true">
+										
+										</h:commandButton>
+									</div>
+									</h:form>
+									</div>
+									</div>
+									</div>
+									
+				<!-- update  -->
+									
+				<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog"
+					tabindex="-1" id="update" class="modal fade">
+					<div class="modal-dialog" style="width: 50%;">
+
+						<div class="modal-content">
+
+		<h:form id="updateGerenciaCentral" class="form-validate form-horizontal" method="get" action="">
+
+								<div class="modal-header">
+									<button aria-hidden="true" data-dismiss="modal" class="close"
+										type="button" jsf:immediate="true">×</button>
+									<h2>Editar Gerencia</h2>
+
+								</div>
+
+								<div class="modal-body">
+
+									<div class="container">
+									
+									<div class="form-group required-field-block">
+											<h:outputLabel for="codigo" class="control-label col-sm-4">Codigo:</h:outputLabel>
+											<div class="col-sm-4">
+												<h:inputText id="codigo" name="codigo"
+													pt:placeholder="Codigo"
+													value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.codigoPropio}"
+													class="form-control" required="true"
+													requiredMessage="Descripcion is required">
+
+												</h:inputText>
+												<h:message for="codigo" />
+											</div>
+										</div>
+									
+
+										<div class="form-group required-field-block">
+											<h:outputLabel for="descripc" class="control-label col-sm-4">Descripcion:</h:outputLabel>
+											<div class="col-sm-4">
+												<h:inputText id="descripc" name="descripc"
+													pt:placeholder="Descripcion"
+													value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.descripcion}"
+													class="form-control" required="true"
+													requiredMessage="Descripcion is required">
+
+												</h:inputText>
+												<h:message for="descripc" />
+											</div>
+										</div>
+
+										<div class="form-group required-field-block">
+											<h:outputLabel for="descripcorta" class="control-label col-sm-4">Descripcion Corta:</h:outputLabel>
+											<div class="col-sm-4">
+												<h:inputText id="descripcorta" name="descripcorta"
+													pt:placeholder="Descripcion Corta"
+													value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.descripcionCorta}"
+													class="form-control" required="true"
+													requiredMessage="Descripcion Corta is required">
+
+												</h:inputText>
+												<h:message for="descripcorta" />
+											</div>
+										</div>
+										
+										<div class="form-group">
+										<h:outputLabel for="estado" class="control-label col-sm-4">Estado:</h:outputLabel>
+										<div class="col-sm-4">
+
+											<h:selectOneMenu id="estado" class="form-control"
+												value="#{gerenciaCentralBean.gerenciaCentralSeleccionado.estado}"
+												validatorMessage="Estado is required">
+												<f:selectItem itemLabel="Habilitado" itemValue="1" />
+												<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
+												<f:validateRequired />
+											</h:selectOneMenu>
+										</div>
+									</div>
+									</div>
+									</div>
+									
+									<div class="modal-footer">
+
+
+									<h:commandButton value="Editar"
+										action="#{gerenciaCentralBean.update()}"
+										class="btn btn-success btnWidth"
+										update=":listaGerenciaCentral:central_dt" />
+
+
+									<h:commandButton value="Cerrar"
+										class="btn btn-success btnWidth" inmediate="true">
+										
+										</h:commandButton>
+									</div>
+									</h:form>
+									</div>
+									</div>
+									</div>
+									<!-- fin update -->
+
+</div>
+</div>
+
+								
+	</ui:define>
+
+<ui:define name="script">
+
+		<script type="text/javascript">
+    $(document).ready(function() {
+        $('#central_dt').DataTable(
+            
+             {     
+
+          "aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "iDisplayLength": 5
+           } 
+            );
+    } );
+    </script>
+		<script type="text/javascript" src="/resources/js/form-validation-script.js">
+		</script>
+	</ui:define>
 </ui:composition>
 </html>

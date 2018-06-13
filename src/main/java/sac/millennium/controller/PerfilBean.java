@@ -26,7 +26,6 @@ public class PerfilBean implements Serializable {
 	private IPerfilService servPerfil = new PerfilServiceImpl(daoPerfil);
 
 	private Perfil perfilSeleccionado;
-	private UIData dtFilaP;
 
 	private String id;
 	List<Perfil> listaPerfil;
@@ -74,24 +73,25 @@ public class PerfilBean implements Serializable {
 	public void editPerfil(String idPer) {
 	
 		
-		System.out.println("mostrar: "+ perfilSeleccionado.getId() + "--" + perfilSeleccionado.getDescripcion()
-		+ "--" + perfilSeleccionado.getDescripcionCorta() + "--" + perfilSeleccionado.getEstado());
+	//	System.out.println("mostrar: "+ perfilSeleccionado.getId() + "--" + perfilSeleccionado.getDescripcion()
+	//	+ "--" + perfilSeleccionado.getDescripcionCorta() + "--" + perfilSeleccionado.getEstado());
 		
 		
 		perfilSeleccionado = servPerfil.findById(idPer);
 
-		//perfilSeleccionado.setId(idPer);
-		
-		// return DatabaseOperation.editStudentRecordInDB(studentId);
 	}
 	public void update() {
 		servPerfil.update(perfilSeleccionado);
 		
-		//listarTodo();
+		listarTodo();
 	}
 	public void elimina(String id) {
+	//	System.out.println("delete" + id);
 		
-		servPerfil.delete(id);
+	
+		perfilSeleccionado.setId(id);
+	
+	 servPerfil.delete(id);
 		
 		listarTodo();
 	}
@@ -142,12 +142,5 @@ public class PerfilBean implements Serializable {
 	// }
 	// }
 
-	public UIData getDtFilaP() {
-		return dtFilaP;
-	}
-
-	public void setDtFilaP(UIData dtFilaP) {
-		this.dtFilaP = dtFilaP;
-	}
 
 }

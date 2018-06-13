@@ -3,161 +3,134 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-<ui:composition template="/WEB-INF/templates/uiConMenu.xhtml">
+<ui:composition template="/WEB-INF/template/commonLayout.xhtml">
+	<ui:define name="assets">
+	</ui:define>
+
 	<ui:define name="pageTitle">Area Funcional</ui:define>
-	<ui:define name="pageHeader"></ui:define>
+
 	<ui:define name="body">
-		<h:form id="listaAreaFuncional">
+		<center>
+			<h2>
+				<h:outputText value="Lista de Area Funcional" />
+			</h2>
+		</center>
 
-			<p:fieldset legend="Area Funcional">
+		<!-- Listar Todo -->
 
-				<p:panelGrid columns="6">
-					<p:dataTable id="tblAreaFunc"
-						value="#{areaFuncionalBean.listaAreaFuncional}" var="fila"
-						selectionMode="single" rowKey="#{fila.id}" editable="true"
-						style="margin-bottom:20px" paginator="true" rows="5"
-						widgetVar="cell_are"
-						paginatorTemplate="	{FirstPageLink}
-					{LastPageLink}
-					{PreviousPageLink}
-					{NextPageLink}
-					{PageLinks}
-					{CurrentPageReport}
-					{RowsPerPageDropdown} "
-						scrollable="true" rowsPerPageTemplate="1, 3, 5"
-						currentPageReportTemplate="Página: ({currentPage}/{totalPages})">
-
-						<f:facet name="header"> Lista Area Funcional</f:facet>
-
-						<p:column headerText="Gerencia Central">
-							<h:outputText
-								value="#{fila.gerencia.gerenciaCentral.descripcion}" />
-						</p:column>
-
-						<p:column headerText="Gerencia ">
-							<h:outputText value="#{fila.gerencia.descripcion}" />
-						</p:column>
-
-						<p:column headerText="Id">
-							<h:outputText value="#{fila.id}" />
-						</p:column>
-
-						<p:column headerText="Codigo">
-							<h:outputText value="#{fila.codigoPropio}" />
-						</p:column>
-
-						<p:column headerText="Descripcion">
-							<h:outputText value="#{fila.descripcion}" />
-						</p:column>
-
-						<p:column headerText="Descripcion Corta">
-							<h:outputText value="#{fila.descripcionCorta}" />
-						</p:column>
-
-						<p:column headerText="Estado">
-							<h:outputText
-								value="#{fila.estado==1?'Habilitado':'Deshabilitado'}" />
-						</p:column>
+		<div class="container">
 
 
-					</p:dataTable>
-				</p:panelGrid>
+			<div class="table-responsive">
 
-				<p:commandButton type="button" value="Crear Area Funcional"
-					id="crearBtn" onclick="PF('areaFunc_create').show()"></p:commandButton>
+				<a data-toggle="modal" href="#dgl_crear_areaFunc"
+					class="btn btn-primary"><i class="fa fa-plus"></i> Nueva Area
+					Funcional</a>
+
+				<h:form id="form_AreaFuncional">
+
+					<table id="areaFunc_dt" class="table table-striped table-bordered"
+						style="width: 100%">
+
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Descripcion</th>
+								<th>Descripcion Corta</th>
+								<th>Estado</th>
+								<th>Acciones</th>
+
+							</tr>
+						</thead>
+
+						<tbody>
+							<c:forEach items="#{areaFuncionalBean.listaAreaFuncional}"
+								var="areaFunc">
+								<tr>
+									<td><h:outputText value="#{areaFunc.id}" /></td>
+									<td><h:outputText value="#{areaFunc.descripcion}" /></td>
+									<td><h:outputText value="#{areaFunc.descripcionCorta}" /></td>
+									<td><h:outputText
+											value="#{areaFunc.estado==1?'Habilitado':'Deshabilitado'}" /></td>
+									<td>
+										<div class="col-sm-2">
+											<a data-toggle="modal" href="#update" jsf:id="btn_update"
+												class="btn btn-primary btn-large" jsf:ajax="false">
+												Update <f:ajax event="click"
+													listener="#{areaFuncionalBean.editarea(areaFunc.id)}"
+													render=":updatePerfil" />
+											</a>
+										</div>
+										<div class="col-sm-1"></div>
+
+										<div class="col-sm-2">
+											<a data-toggle="modal" href="#amodal" class="btn btn-danger">Delete
+												<f:ajax event="click"
+													listener="#{areaFuncionalBean.editarea(areaFunc.id)}"></f:ajax>
+											</a>
 
 
+										</div>
+									</td>
 
-			</p:fieldset>
-		</h:form>
+								</tr>
 
-		<p:dialog closeOnEscape="true" widgetVar="areaFunc_create"
-			autoupdate="true" showEffect="clip" hideEffect="drop" width="800"
-			footer="Crear Nueva Area Funcional">
-			<h:form id="crearAreaFunc">
+							</c:forEach>
+						</tbody>
+					</table>
+				</h:form>
+				<!-- delete -->
+				<div role="dialog" id="amodal" class="modal fade">
+					<div class="modal-dialog" style="width: 20%;">
 
-				<p:growl id="msgs" showDetail="true" life="2000"></p:growl>
+						<div class="modal-content">
+							<h:form id="form_delete">
+								<div class="modal-header">
+									<button aria-hidden="true" data-dismiss="modal" class="close"
+										type="button" jsf:immediate="true">×</button>
+									<h3>Seguro de eliminar</h3>
+									<div class="modal-footer">
+										<h:button value="No" dismiss="modal"
+											class="btn btn-success btnWidth" />
+										<h:commandButton
+											action="#{areaFuncionalBean.elimina(areaFuncionalBean.areaFuncionalSeleccionado.id)}"
+											value="Yes" class="btn btn-success btnWidth" dismiss="modal"
+											update=":form_AreaFuncional:areaFunc_dt" />
+									</div>
+								</div>
+							</h:form>
+						</div>
 
-				<p:fieldset legend="Crear Area Funcional">
-					<h:panelGrid columns="3">
-			
-
-				<p:outputLabel value="Gerencia Central" for="cboGeCen" />
-				<p:selectOneMenu id="cboGeCen"
-					value="#{areaFuncionalBean.idGerenciaCentral}">
-					<f:selectItem itemLabel="[Seleccione]" itemValue=" "
-						noSelectionOption="true" />
-					<f:selectItems value="#{areaFuncionalBean.listaGerenciaCentral}"
-						var="gece" itemLabel="#{gece.descripcion}" itemValue="#{gece.id}" />
-					<f:ajax event="change"
-						listener="#{areaFuncionalBean.listarGerencia()}"
-						execute="cboGeCen" render="cboGerencia" />
-
-				</p:selectOneMenu>
-				<p:message for="cboGeCen"></p:message>
-
-				<p:outputLabel value="Gerencia" for="cboGerencia" />
-				<p:selectOneMenu id="cboGerencia"
-					value="#{areaFuncionalBean.idGerencia}">
-
-					<f:selectItem itemLabel="[Seleccione]" itemValue=" "
-						noSelectionOption="true" />
-
-					<f:selectItems value="#{areaFuncionalBean.listaGerencia}" var="reg"
-						itemLabel="#{reg.descripcion}" itemValue="#{reg.id}" />
-
-				</p:selectOneMenu>
-				<p:message for="cboGerencia"></p:message>
+					</div>
+				</div>
+				<!-- fin delete -->
 
 
-				<p:outputLabel value="Codigo" for="text_cod" />
-						<p:inputText id="text_cod"
-							value="#{areaFuncionalBean.areaFuncionalSeleccionado.codigoPropio}"
-							style="width: 200px;" required="true"
-							requiredMessage="Completar Codigo" />
-						<p:message for="text_cod" />
-						
-					<p:outputLabel value="Descripcion" for="text_des" />
-						<p:inputText id="text_des"
-							value="#{areaFuncionalBean.areaFuncionalSeleccionado.descripcion}"
-							style="width: 200px;" required="true"
-							requiredMessage="Completar Descripcion" />
-						<p:message for="text_des" />
-						
-					<p:outputLabel value="Descripcion Corta" for="text_desCor" />
-						<p:inputText id="text_desCor"
-							value="#{areaFuncionalBean.areaFuncionalSeleccionado.descripcionCorta}"
-							style="width: 200px;" required="true"
-							requiredMessage="Completar Descripcion Corta" />
-						<p:message for="text_desCor" />
-					
-					
-					<p:outputLabel value="Estado" for="tipoEstado"></p:outputLabel>
-						<p:selectOneMenu id="tipoEstado"
-							value="#{areaFuncionalBean.areaFuncionalSeleccionado.estado}">
-							<f:selectItem itemLabel="Habilitado" itemValue="1" />
-							<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
-						</p:selectOneMenu>
-						<p:message for="tipoEstado"></p:message>
-					
-					
-					<p:commandButton value="Registrar"
-							actionListener="#{areaFuncionalBean.registrar()}"
-							oncomplete="if(!args.validationFailed) PF('areaFunc_create').hide()"
-							update="#{areaFuncionalBean.listarTodo()}"
-							inmediate="true">
-							<p:ajax rendered=":listaAreaFuncional:tblAreaFunc"></p:ajax>
-						</p:commandButton>
-					
-			
-					</h:panelGrid>
-					</p:fieldset>
-			
-			</h:form>
-		</p:dialog>
+				<!-- crear Area -->
+				<!-- fin crear -->
+				
+				</div>
+				</div>
+	</ui:define>
+	<ui:define name="script">
 
+		<script type="text/javascript">
+    $(document).ready(function() {
+        $('#areaFunc_dt').DataTable(
+            
+             {     
+
+          "aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "iDisplayLength": 5
+           } 
+            );
+    } );
+    </script>
+		
 	</ui:define>
 </ui:composition>
 

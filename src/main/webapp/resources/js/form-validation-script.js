@@ -32,6 +32,12 @@ var Script = function () {
                     minlength: 5,
                     equalTo: "#password"
                 },
+                descripc: {
+                    required: true
+                },
+                descripcionCorta: {
+                    required: true
+                },
                 email: {
                     required: true,
                     email: true
@@ -59,12 +65,21 @@ var Script = function () {
                     required: "Please provide a password.",
                     minlength: "Your password must be at least 5 characters long."
                 },
+                descripc: {
+                	required: "Por favor ingresar Descripcion"
+                },
+                descripcionCorta: {
+                	required: "Por favor ingresar Descripcion  Corta"
+                },
+
                 confirm_password: {
                     required: "Please provide a password.",
                     minlength: "Your password must be at least 5 characters long.",
                     equalTo: "Please enter the same password as above."
                 },
                 email: "Please enter a valid email address.",
+                
+                
                 agree: "Please accept our terms & condition."
             }
         });

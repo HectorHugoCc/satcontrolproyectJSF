@@ -47,6 +47,34 @@ public class PuestoBean implements Serializable {
 				+ "--" + puestoSeleccionado.getDescripcionCorta() + "--" + puestoSeleccionado.getEstado());
 
 		servPuesto.create(puestoSeleccionado);
+		
+		limpiar();
+	}
+
+	private void limpiar() {
+		puestoSeleccionado = new Puesto();		
+	}
+
+	public void leerPuesto(String idPu) {
+	
+		
+		puestoSeleccionado = servPuesto.findById(idPu);
+
+	}
+	public void update() {
+		servPuesto.update(puestoSeleccionado);
+		
+		listarTodo();
+	}
+	public void elimina(String id) {
+	//	System.out.println("delete" + id);
+		
+	
+		puestoSeleccionado.setId(id);
+	
+	 servPuesto.delete(id);
+		
+		listarTodo();
 	}
 
 	public Puesto getPuestoSeleccionado() {

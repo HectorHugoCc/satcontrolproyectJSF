@@ -22,6 +22,8 @@ public class GerenciaCentralServiceImpl implements IGerenciaCentralService {
 	@Override
 	public int create(GerenciaCentral obj) {
 		String id = generarId();
+		System.out.println("service: "+ id);
+		
 		obj.setId(id);
 		return dao.create(obj);
 	}

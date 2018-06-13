@@ -59,9 +59,38 @@ public class TemaBean implements Serializable {
 		tema.setTipoTema(tt);
 
 		servTema.create(tema);
+		
+		listarTodo();
+		limpiar();
 
 	}
 
+
+	private void limpiar() {
+		tema = new Tema();
+		
+	}
+
+	public void leerTema(String idTema) {
+	tema = servTema.findById(idTema);
+
+	}
+	public void update() {
+		servTema.update(tema);
+		
+		listarTodo();
+	}
+	public void elimina(String id) {
+	//	System.out.println("delete" + id);
+		
+	
+		tema.setId(id);
+	
+	 servTema.delete(id);
+		
+		listarTodo();
+	}
+	
 	public void listarTodo() {
 		listaTema = servTema.findAll();
 	}

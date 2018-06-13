@@ -114,9 +114,9 @@ public class PerfilSqlserverDAOImpl implements IPerfilDAO {
 			if (rs.next()) {
 				obj = new Perfil();
 				obj.setId(rs.getString("id_perfil"));
-				obj.setDescripcion("descripcion_perfil");
-				obj.setDescripcionCorta("descripcion_corta_perfil");
-				obj.setEstado("estado_perfil");
+				obj.setDescripcion(rs.getString("descripcion_perfil"));
+				obj.setDescripcionCorta(rs.getString("descripcion_corta_perfil"));
+				obj.setEstado(rs.getString("estado_perfil"));
 			}
 			cerrarRecursos();
 		} catch (Exception e) {

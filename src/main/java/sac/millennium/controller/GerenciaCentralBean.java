@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
 
 import sac.millennium.dao.IGerenciaCentralDAO;
 import sac.millennium.dao.impl.GerenciaCentralSqlserverDAOImpl;
@@ -37,46 +35,44 @@ public class GerenciaCentralBean implements Serializable {
 
 	public void registra() {
 		System.out.println(
-				"==>" + gerenciaCentralSeleccionado.getId() + "-" + gerenciaCentralSeleccionado.getCodigoPropio());
+				"==>" + gerenciaCentralSeleccionado.getId() + "-" + gerenciaCentralSeleccionado.getCodigoPropio()+ "-"+
+						gerenciaCentralSeleccionado.getDescripcion()+"-"+gerenciaCentralSeleccionado.getDescripcionCorta()+
+						gerenciaCentralSeleccionado.getEstado());
+		
 		servGerenciaCentral.create(gerenciaCentralSeleccionado);
+		
+		listarTodo();
+		limpiar();
 	}
 
-	public void leer() {
-
+	public void limpiar() {
+		gerenciaCentralSeleccionado = new GerenciaCentral();
+		
 	}
 
-	public void modfica() {
-		try {
-			GerenciaCentral gerenciaCentralSeleccionado = new GerenciaCentral();
+	public void leerCentral(String idCen) {
+			
+			gerenciaCentralSeleccionado = servGerenciaCentral.findById(idCen);
+
+		}
+		public void update() {
 			servGerenciaCentral.update(gerenciaCentralSeleccionado);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso",
-					"Se modificó usuario: " + gerenciaCentralSeleccionado.getDescripcion()));
-
-			nuevo();
-		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Aviso",
-					"Error al intentar modificar: " + e.getMessage()));
+			
+			listarTodo();
+		}
+		public void elimina(String id) {
+		//	System.out.println("delete" + id);
+			
+		
+			//gerenciaCentralSeleccionado.setId(id);
+		
+		 servGerenciaCentral.delete(id);
+			
+			listarTodo();
 		}
 
-	}
 
-	private String nuevo() {
-		gerenciaCentralSeleccionado = new GerenciaCentral();
-		return null;
-	}
 
-	// public void onRowEdit(RowEditEvent event) {
-	// servGerenciaCentral.update((GerenciaCentral) event.getObject());
-	// FacesMessage msg = new FacesMessage("Car Edited", ((GerenciaCentral)
-	// event.getObject()).getId());
-	// FacesContext.getCurrentInstance().addMessage(null, msg);
-	// }
-	//
-	// public void onRowCancel(RowEditEvent event) {
-	// FacesMessage msg = new FacesMessage("Edit Cancelled", ((GerenciaCentral)
-	// event.getObject()).getId());
-	// FacesContext.getCurrentInstance().addMessage(null, msg);
-	// }
 
 	public List<GerenciaCentral> getListaGerenciaCentral() {
 		listaGerenciaCentral = servGerenciaCentral.findAll();

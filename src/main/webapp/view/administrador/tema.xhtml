@@ -1,197 +1,240 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-
+	
 <ui:composition template="/WEB-INF/template/commonLayout.xhtml">
-
+<ui:define name="assets">
+	</ui:define>
+	
 	<ui:define name="pageTitle">Tema</ui:define>
-	<ui:define name="pageHeader"></ui:define>
+
 	<ui:define name="body">
 
+		<center>
+			<h2>
+				<h:outputText value="Lista de Temas" />
+			</h2>
+		</center>
+		
+<!-- Listar Todo -->
+
+		<div class="container">
+
+
+			<div class="table-responsive">
+
+				<a data-toggle="modal" href="#dgl_crear_tema"
+					class="btn btn-primary"><i
+						class="fa fa-plus"></i> Nuevo Tema</a>
+
+
+
+				
 		<h:form id="listaTema">
 
-			<p:fieldset legend="Tema" widgetVar="wlistar">
-				<h:panelGrid columns="6">
+			<table id="tema_dt" class="table table-striped table-bordered"
+						style="width: 100%">
 
-					<p:dataTable id="tblTema" var="tema" value="#{temaBean.listaTema}"
-						selectionMode="single" rowKey="#{tema.id}" editable="true"
-						style="margin-bottom:20px" paginator="true" rows="5"
-						widgetVar="cell_tema"
-						paginatorTemplate="	{FirstPageLink}
-					{LastPageLink}
-					{PreviousPageLink}
-					{NextPageLink}
-					{PageLinks}
-					{CurrentPageReport}
-					{RowsPerPageDropdown} "
-						scrollable="true" rowsPerPageTemplate="1, 3, 5"
-						currentPageReportTemplate="Página: ({currentPage}/{totalPages})">
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Nombre</th>
+								<th>Gerencia Central</th>
+								<th>Naturaleza</th>
+								<th>Fecha de Inicio</th>
+								<th>Fecha Fin</th>
+								<th>Dias</th>
+								<th>Avance completado</th>
+								<th>Avance Planeado</th>
+								<th>Estado</th>
+								<th>Tipo</th>
+								<th>Acciones</th>
 
-						<f:facet name="header">Lista Perfil</f:facet>
+							</tr>
+						</thead>
+						
+						<tbody>
+							<c:forEach items="#{temaBean.listaTema}" var="tema">
+								<tr>
+									<td><h:outputText value="#{tema.id}" /></td>
+									<td><h:outputText value="#{tema.nombre}" /></td>
+									<td><h:outputText value="#{tema.gerenciaCentral.descripcion}" /></td>
+									<td><h:outputText value="#{tema.naturaleza==1?'Tributario':'No Tributario'}" /></td>
+									<td><h:outputText value="#{tema.fechaInicio}" /></td>
+									<td><h:outputText value="#{tema.fechaFin}" /></td>
+									<td><h:outputText value="#{tema.diasUtiles}" /></td>
+									<td><h:outputText value="#{tema.avanceCompletado}" /></td>
+									<td><h:outputText value="#{tema.avancePlaneado}" /></td>
+									
+									<td><h:outputText
+											value="#{tema.estado}" /></td>
+									
+									<td><h:outputText value="#{tema.tipoTema.nombreTipoTema}" /></td>
+									<td>
+									<div class="col-sm-2">
+									<a data-toggle="modal" href="#update"
+										jsf:id="btn_update" class="btn btn-primary btn-large"
+										jsf:ajax="false"> Update 
+										<f:ajax event="click"
+												listener="#{temaBean.leerTema(tema.id)}"
+												render=":updateTema" />
+									</a>
+									</div>
+										
+										 <div class="col-sm-1"></div>
+										
+									  <div class="col-sm-2">
+											<a data-toggle="modal" href="#amodal"
+											 class="btn btn-danger" >Delete
+											 <f:ajax event="click" listener="#{temaBean.leerTema(tema.id)}"></f:ajax></a>
+											
+										
+										</div>
+										</td>
 
-						<p:column headerText="Id">
-							<h:outputText value="#{tema.id}" />
-						</p:column>
+								</tr>
 
-						<p:column headerText="Nombre">
-							<h:outputText value="#{tema.nombre}" />
-						</p:column>
+							</c:forEach>
+						</tbody>
+						
+					</table>
+				
+									
+			 </h:form>
+			
+			<!-- advertencia delete -->
+			<div role="dialog"
+					id="amodal" class="modal fade">
+					<div class="modal-dialog" style="width: 20%;">
 
-						<p:column headerText="Gerencia Central">
-							<h:outputText value="#{tema.gerenciaCentral.descripcion}" />
-						</p:column>
+						<div class="modal-content">
+							<h:form id="form_delete">
+							<div class="modal-header">
+								<button aria-hidden="true" data-dismiss="modal" class="close"
+										type="button" jsf:immediate="true">×</button>
+									<h3>Seguro de eliminar</h3>
+								<div class="modal-footer">
+							    <h:button value="No" dismiss="modal" class="btn btn-success btnWidth"/>
+							    <h:commandButton action="#{temaBean.elimina(temaBean.tema.id)}" 
+							    value="Yes" class="btn btn-success btnWidth" dismiss="modal"
+							    update=":listaTema:tema_dt"/>
+							  </div>
+								</div>
+								</h:form>
+								</div>
 
-						<p:column headerText="Naturaleza">
-							<h:outputText
-								value="#{tema.naturaleza==1?'Tributario':'No tributario'}" />
-						</p:column>
+			</div>
+			</div>
+			<!-- fin delete -->
+			
+			<!-- crear Perfil -->
+				<div role="dialog"
+					id="dgl_crear_tema" class="modal fade">
+					<div class="modal-dialog" style="width: 50%;">
 
-						<p:column headerText="Fecha Inicio">
-							<h:outputText value="#{tema.fechaInicio}">
-								<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
-							</h:outputText>
-						</p:column>
+						<div class="modal-content">
 
-						<p:column headerText="Fecha Fin">
-							<h:outputText value="#{tema.fechaFin}">
-								<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
-							</h:outputText>
-						</p:column>
+						<h:form id="createPerfil_form" class="form-validate form-horizontal" method="get" action="">
 
-						<p:column headerText="Dias Utiles">
-							<h:outputText value="#{tema.diasUtiles}" />
-						</p:column>
+								<div class="modal-header">
+								<button aria-hidden="true" data-dismiss="modal" class="close"
+										type="button" jsf:immediate="true">×</button>
+									<h2>Crear Nuevo Tema</h2>
 
-						<p:column headerText="Avance Completado">
-							<h:outputText value="#{tema.avanceCompletado}">
-								<f:convertNumber minFractionDigits="2" />
-							</h:outputText>
-						</p:column>
+								</div>
 
-						<p:column headerText="Avance Planeado">
-							<h:outputText value="#{tema.avancePlaneado}">
-								<f:convertNumber minFractionDigits="2" />
-							</h:outputText>
-						</p:column>
+								<div class="modal-body">
+								
+								<div class="container">
+								<div class="form-group required-field-block">
+										<h:outputLabel for="nombre" class="control-label col-sm-4">Nombre:</h:outputLabel>
+										<div class="col-sm-4">
+											<h:inputText id="nombre" name="nombre" pt:placeholder="Nombre"
+												value="#{temaBean.tema.nombre}"
+												class="form-control" required="true"
+                   						 requiredMessage="Nombre is required">
+                   						 
+											</h:inputText>
+										<h:message  for="nombre" />
+										</div>
+									</div>
+						
+							<div class="form-group">
+										<h:outputLabel for="gerencia_cen" class="control-label col-sm-4">Gerencia Central:</h:outputLabel>
+										<div class="col-sm-4">
 
-						<p:column headerText="Estado">
-							<h:outputText value="#{tema.estado}" />
-						</p:column>
+											<h:selectOneMenu id="gerencia_cen" class="form-control"
+												value="#{temaBean.idGerenciaCentral}"
+												validatorMessage="Gerencia Central is required">
+												
+											<f:selectItems value="#{temaBean.listaGerenciaCentral}"
+												var="gece" itemLabel="#{gece.descripcion}"
+												itemValue="#{gece.id}" />
+												<f:validateRequired />
+											</h:selectOneMenu>
+										</div>
+									</div>
+			
+					<div class="form-group">
+									<h:outputLabel for="naturaleza" class="control-label col-sm-4">Naturaleza:</h:outputLabel>
+									<div class="col-sm-4">
 
-						<p:column headerText="Tipo">
-							<h:outputText value="#{tema.tipoTema.nombreTipoTema}" />
-						</p:column>
-
-					</p:dataTable>
-				</h:panelGrid>
-
-				<p:commandButton type="button" value="Crear Tema" id="crearBtn"
-					onclick="PF('tema_create').show()"></p:commandButton>
-
-			</p:fieldset>
-
-		</h:form>
-
-		<p:dialog closeOnEscape="true" widgetVar="tema_create"
-			showEffect="clip" hideEffect="drop" width="800" footer="Crear Tema"
-			resizable="false" draggable="false">
-			<h:form id="crearTema">
-
-				<p:growl id="msgs" showDetail="true" life="2000"></p:growl>
-
-				<p:fieldset legend="Crear Tema">
-					<h:panelGrid columns="3">
-
-						<p:outputLabel value="Nombre" for="text_nom" />
-						<p:inputText id="text_nom" value="#{temaBean.tema.nombre}"
-							style="width: 200px;" required="true"
-							requiredMessage="Completar Nombre" />
-						<p:message for="text_nom" />
-
-						<p:outputLabel value="Gerencia Central" for="cboGeCen" />
-						<p:selectOneMenu id="cboGeCen"
-							value="#{temaBean.idGerenciaCentral}">
-							<f:selectItem itemLabel="[Seleccione]" itemValue=" "
-								noSelectionOption="true" />
-							<f:selectItems value="#{temaBean.listaGerenciaCentral}"
-								var="gece" itemLabel="#{gece.descripcion}"
-								itemValue="#{gece.id}" />
-
-						</p:selectOneMenu>
-						<p:message for="cboGeCen"></p:message>
-
-						<p:outputLabel value="Naturaleza" for="tipoNaturaleza"></p:outputLabel>
-						<p:selectOneMenu id="tipoNaturaleza"
-							value="#{temaBean.tema.naturaleza}">
-							<f:selectItem itemLabel="Tributario" itemValue="1" />
-							<f:selectItem itemLabel="No tributario" itemValue="2" />
-						</p:selectOneMenu>
-						<p:message for="tipoNaturaleza"></p:message>
-
-						<p:outputLabel value="Fecha Inicio" for="txt_fechaIni" />
-						<p:calendar id="txt_fechaIni" value="#{temaBean.tema.fechaInicio}"
-							locale="es" showOn="button" pattern="yyyy-MM-dd" />
-						<p:message for="txt_fechaIni"></p:message>
-
-						<p:outputLabel value="Fecha Fin" for="txt_fechaFin" />
-						<p:calendar id="txt_fechaFin" value="#{temaBean.tema.fechaFin}"
-							locale="es" showOn="button" pattern="yyyy-MM-dd" />
-						<p:message for="txt_fechaFin"></p:message>
-
-						<p:outputLabel value="Dias Utiles" for="txt_dias" />
-						<p:inputText id="txt_dias" value="#{temaBean.tema.diasUtiles}" />
-						<p:message for="txt_dias"></p:message>
-
-						<p:outputLabel value="Avance Completado" for="txt_avance" />
-						<p:inputText id="txt_avance"
-							value="#{temaBean.tema.avanceCompletado}" required="true"
-							requiredMessage="Obligatorio Avance">
-							<f:validateDoubleRange minimum="1.00" />
-						</p:inputText>
-						<p:message for="txt_avance"></p:message>
-
-						<p:outputLabel value="Avance Planeado" for="avance_plan" />
-						<p:inputText id="avance_plan"
-							value="#{temaBean.tema.avancePlaneado}" required="true"
-							requiredMessage="Obligatorio Avance">
-							<f:validateDoubleRange minimum="1.00" />
-						</p:inputText>
-						<p:message for="avance_plan"></p:message>
-
-						<p:outputLabel value="Estado" for="tipoEstado"></p:outputLabel>
-						<p:selectOneMenu id="tipoEstado" value="#{temaBean.tema.estado}">
-							<f:selectItem itemLabel="Pendiente" itemValue="P" />
-							<f:selectItem itemLabel="Completado" itemValue="C" />
-							<f:selectItem itemLabel="Atrazado" itemValue="A" />
-						</p:selectOneMenu>
-						<p:message for="tipoEstado"></p:message>
-
-						<p:outputLabel value="Tipo" for="cbotipo" />
-						<p:selectOneMenu id="cbotipo" value="#{temaBean.idTipo}">
-							<f:selectItem itemLabel="[Seleccione]" itemValue=" "
-								noSelectionOption="true" />
-							<f:selectItems value="#{temaBean.listaTipo}" var="tipo"
-								itemLabel="#{tipo.siglasTipoTema} - #{tipo.nombreTipoTema}"
-								itemValue="#{tipo.idTipoTema}" />
-
-						</p:selectOneMenu>
-						<p:message for="cbotipo"></p:message>
-
-						<p:commandButton value="Registrar" ajax="false"
-							actionListener="#{temaBean.registrar()}"
-							oncomplete="if(!args.validationFailed) PF('tema_create').hide()"
-							update="#{temaBean.listarTodo()}" inmediate="true">
-							<p:ajax render=":listaTema :listaTema:tblTema"></p:ajax>
-						</p:commandButton>
-					</h:panelGrid>
-				</p:fieldset>
-			</h:form>
-		</p:dialog>
+										<h:selectOneMenu id="naturaleza" class="form-control"
+											value="#{temaBean.tema.naturaleza}"
+											validatorMessage="Naturaleza is required">
+											<f:selectItem itemLabel="Tributario" itemValue="1" />
+											<f:selectItem itemLabel="No tributario" itemValue="2" />
+											<f:validateRequired />
+										</h:selectOneMenu>
+									</div>
+								</div>
+								
+								<div class="form-group">
+										<h:outputLabel for="fechaIni" class="control-label col-sm-4">Fecha Inicio:</h:outputLabel>
+									 <div class="col-sm-6">
+		                          <input id="dp1"/>
+		                        </div>	
+									</div>
+		
+							
+								
+							
+							</div>
+							</div>
+							</h:form>
+							
+				</div>
+				</div>
+				</div>
+			
+		
+		 </div>
+		 </div>
+		 
 	</ui:define>
+	
+	<ui:define name="script">
+
+		<script type="text/javascript">
+    $(document).ready(function() {
+        $('#tema_dt').DataTable(
+            
+             {     
+
+          "aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "iDisplayLength": 5
+           } 
+            );
+    } );
+    </script>
+	</ui:define>
+	
 </ui:composition>
 
 </html>
